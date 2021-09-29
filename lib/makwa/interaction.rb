@@ -2,6 +2,16 @@
 
 module Makwa
   class Interaction < ::ActiveInteraction::Base
+    class Interrupt < StandardError
+      attr_reader :errors
+
+      def initialize(errors)
+        super
+
+        @errors = errors
+      end
+    end
+
     #
     # Safely checking for errors
     #
@@ -17,8 +27,7 @@ module Makwa
 
     # Exits early if there are any errors.
     def return_if_errors!
-      # NOTE: ActiveInteraction::Interrupt is marked as a private_constant, so we have to use .const_get to access it.
-      raise(Object.const_get("::ActiveInteraction::Interrupt"), errors) if errors_any?
+      raise(Interrupt, errors) if errors_any?
     end
 
     #
@@ -73,6 +82,19 @@ module Makwa
     def indent
       lvl = [0, calling_interactions.count].max
       "  " * lvl
+    end
+
+    private
+
+    def run
+      return self.result = nil unless valid?
+
+      self.result = run_callbacks(:execute) do
+        execute
+      rescue ::Makwa::Interaction::Interrupt => e
+        errors.backtrace = e.errors.backtrace || e.backtrace
+        errors.merge!(e.errors)
+      end
     end
   end
 end

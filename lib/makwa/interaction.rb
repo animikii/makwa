@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Makwa
   class Interaction < ::ActiveInteraction::Base
     #
@@ -16,7 +17,8 @@ module Makwa
 
     # Exits early if there are any errors.
     def return_if_errors!
-      return if errors_any?
+      # NOTE: ActiveInteraction::Interrupt is marked as a private_constant, so we have to use .const_get to access it.
+      raise(Object.const_get("::ActiveInteraction::Interrupt"), errors) if errors_any?
     end
 
     #

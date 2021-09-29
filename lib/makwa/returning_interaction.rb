@@ -48,7 +48,6 @@ module Makwa
       return result.tap { |r| r.errors.merge!(errors) } if errors_any?
 
       # Otherwise run the body of the interaction (along with any callbacks) ...
-      # run_callbacks(:execute_returning) { execute_returning }
       run_callbacks(:execute_returning) do
         execute_returning
       rescue ::Makwa::Interaction::Interrupt

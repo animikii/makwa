@@ -61,6 +61,32 @@ module Makwa
       end
     end
 
+    # This is the ReturningInteraction we're testing for errors
+    class ErrorReturningInteractionUnderTest < Makwa::ReturningInteraction
+      returning :returned_record
+
+      record :returned_record, class: ImplementsActiveModelErrorsInterface
+
+      boolean :boolean_attr
+      integer :integer_attr
+      hash :nested_hash_attr, strip: false, default: {}
+
+      def execute_returning
+        returned_record.boolean_attr = boolean_attr
+
+        errors.add(:error, "on the interaction")
+        returned_record.errors.add(:error, "on the returned object")
+
+        errors.add(:duplicate, "error on both")
+        returned_record.errors.add(:duplicate, "error on both")
+
+        return_if_errors!
+
+        returned_record.integer_attr = integer_attr
+        returned_record.nested_hash_attr = nested_hash_attr.symbolize_keys
+      end
+    end
+
     test "Has no errors with valid inputs" do
       returned_record = ReturningInteractionUnderTest.run_returning!(
         returned_record: ImplementsActiveModelErrorsInterface.new,
@@ -88,6 +114,28 @@ module Makwa
           boolean_attr: [{error: :invalid_type, type: "boolean"}],
           integer_attr: [{error: :invalid_type, type: "integer"}],
           nested_hash_attr: [{error: :invalid_type, type: "hash"}]
+        },
+        returned_record.errors.details
+      )
+    end
+
+    test "Implements #return_if_errors!" do
+      returned_record = ErrorReturningInteractionUnderTest.run_returning!(
+        returned_record: ImplementsActiveModelErrorsInterface.new,
+        boolean_attr: true,
+        integer_attr: 42,
+        nested_hash_attr: {a: 1, b: true, c: "abc"}
+      )
+      assert_equal(true, returned_record.boolean_attr) # Assigned before #return_if_errors!
+      assert_nil(returned_record.integer_attr) # Assigned after #return_if_errors!
+      assert_nil(returned_record.nested_hash_attr) # Assigned after #return_if_errors!
+
+      assert_equal(3, returned_record.errors.size) # 4 were added, but one was duplicated
+      puts returned_record.errors.details unless returned_record.errors.size == 3
+      assert_equal(
+        {
+          error: [{error: "on the returned object"}, {error: "on the interaction"}],
+          duplicate: [{error: "error on both"}]
         },
         returned_record.errors.details
       )

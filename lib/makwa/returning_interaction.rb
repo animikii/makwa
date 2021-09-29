@@ -43,13 +43,26 @@ module Makwa
       raise ReturnFilterInexistent unless result
       raise NotActiveModelErrorable unless result.respond_to?(:errors) && result.errors.respond_to?(:merge!)
 
-      # Run validations (explicitly, don't rely on #valid?), add any errors to result, and return if errors exist
+      # Run validations (explicitly, don't rely on #valid?), add any errors to result, and return result if errors exist
       validate
       return result.tap { |r| r.errors.merge!(errors) } if errors_any?
 
-      run_callbacks(:execute_returning) { execute_returning }
+      # Otherwise run the body of the interaction (along with any callbacks) ...
+      # run_callbacks(:execute_returning) { execute_returning }
+      run_callbacks(:execute_returning) do
+        execute_returning
+      rescue ::Makwa::Interaction::Interrupt
+        # Do nothing
+      end
 
-      result.tap { |r| r.errors.merge!(errors) }
+      # ... and return the result, merging in any errors added in the body of the interaction that are not duplicates.
+      # Duplicates would occur if, for example, the body of the interaction calls
+      # `errors.merge!(<returning_filter>.errors)` as is often done in non-returning interactions.
+      result.tap do |r|
+        errors.each do |e|
+          r.errors.add(e.attribute, e.message) unless r.errors.added?(e.attribute, e.message)
+        end
+      end
     end
 
     # @return [Object]
@@ -72,8 +85,5 @@ module Makwa
     rescue NotImplementedError
       super(other, *args)
     end
-
-    delegate :empty?, to: :errors, prefix: true # def errors_empty?
-    delegate :any?, to: :errors, prefix: true # def errors_any?
   end
 end

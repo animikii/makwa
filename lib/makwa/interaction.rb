@@ -2,14 +2,7 @@
 
 module Makwa
   class Interaction < ::ActiveInteraction::Base
-    class Interrupt < StandardError
-      attr_reader :errors
-
-      def initialize(errors)
-        super
-
-        @errors = errors
-      end
+    class Interrupt < Object.const_get("::ActiveInteraction::Interrupt")
     end
 
     #
@@ -82,19 +75,6 @@ module Makwa
     def indent
       lvl = [0, calling_interactions.count].max
       "  " * lvl
-    end
-
-    private
-
-    def run
-      return self.result = nil unless valid?
-
-      self.result = run_callbacks(:execute) do
-        execute
-      rescue ::Makwa::Interaction::Interrupt => e
-        errors.backtrace = e.errors.backtrace || e.backtrace
-        errors.merge!(e.errors)
-      end
     end
   end
 end

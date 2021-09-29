@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "makwa/version"
+require "active_interaction"
 
 module Makwa
-  class Error < StandardError; end
-  # Your code goes here...
 end
+
+# Dependency boundary
+
+require "makwa/interaction"
+require "makwa/version"

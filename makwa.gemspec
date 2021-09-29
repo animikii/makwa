@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "active_interaction", "~> 4.0"
 
   spec.add_development_dependency "standard"
+  spec.add_development_dependency "byebug"
 end

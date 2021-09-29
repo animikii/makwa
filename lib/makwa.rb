@@ -8,4 +8,5 @@ end
 # Dependency boundary
 
 require "makwa/interaction"
+require "makwa/returning_interaction"
 require "makwa/version"

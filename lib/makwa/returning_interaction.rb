@@ -43,9 +43,14 @@ module Makwa
       raise ReturnFilterInexistent unless result
       raise NotActiveModelErrorable unless result.respond_to?(:errors) && result.errors.respond_to?(:merge!)
 
-      # Run validations (explicitly, don't rely on #valid?), add any errors to result, and return result if errors exist
+      # Run validations (explicitly, don't rely on #valid?)
       validate
-      return result.tap { |r| r.errors.merge!(errors) } if errors_any?
+      if errors_any?
+        # Add errors and values to the result object (so that the form can render them) and return the result object
+        return result
+            .tap { |r| r.errors.merge!(errors) }
+            .tap { |r| r.assign_attributes(inputs.except(@return_filter)) }
+      end
 
       # Otherwise run the body of the interaction (along with any callbacks) ...
       run_callbacks(:execute_returning) do

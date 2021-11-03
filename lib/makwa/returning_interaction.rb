@@ -46,10 +46,11 @@ module Makwa
       # Run validations (explicitly, don't rely on #valid?)
       validate
       if errors_any?
+        return_filter = self.class.instance_variable_get(:@return_filter)
         # Add errors and values to the result object (so that the form can render them) and return the result object
         return result
             .tap { |r| r.errors.merge!(errors) }
-            .tap { |r| r.assign_attributes(inputs.except(@return_filter)) }
+            .tap { |r| r.assign_attributes(inputs.except(return_filter)) }
       end
 
       # Otherwise run the body of the interaction (along with any callbacks) ...

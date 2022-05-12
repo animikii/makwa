@@ -20,7 +20,6 @@ module Admin
 end
 
 # The invoked interaction:
-
 # app/interactions/admin/users/update.rb
 module Admin
   module Users # This module uses plural to avoid naming conflict with ActiveRecord User class

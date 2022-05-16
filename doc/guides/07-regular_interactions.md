@@ -1,4 +1,6 @@
-**Here is a User Signup interaction**
+# Regular Interactions
+
+## Example: User Signup
 
 ```ruby
 # app/interactions/public/users/create.rb

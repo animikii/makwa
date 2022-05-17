@@ -5,11 +5,11 @@ Interactions follow these conventions:
 
 * **Naming**: Interaction names always start with a verb, optionally followed by an Object noun. The Interaction’s parent namespaces provide additional context. When referring to ActiveRecord models in an interaction’s parent namespace, use plural form. This is to avoid naming conflicts with ActiveRecord models. Examples:
 
-    * `users/create.rb`
+* `users/create.rb`
 
-    * `facilitator/groups/close.rb`
+* `facilitator/groups/close.rb`
 
-    * `niiwin/nw_app_structure/nw_patch_items/nw_tables/change/prepare_form_object.rb`
+- `nw_app_structure/nw_patch_items/nw_tables/change/prepare_form_object.rb`
 
 * **Inheritance**: Interactions inherit from ApplicationInteraction, ReturningInteraction, or one of their descendants.
 

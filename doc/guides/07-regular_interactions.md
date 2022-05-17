@@ -39,6 +39,7 @@ module Public
   end
 end
 ```
+
 **Here is a User Signup interaction**
 
 The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for naming conventions.

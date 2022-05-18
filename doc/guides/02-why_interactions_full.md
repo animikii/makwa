@@ -176,14 +176,14 @@ So what are the benefits of using interactions?
 Ok, time to look at some code that uses interactions. We're going to re-implement the opening examples for user signup, but this time using interactions.
 
 1. We start with a basic interaction to create a user.
-	-   The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for naming conventions.
-	-   We first specify the input filters. They will check for the presence and correct type of each input argument. They can do type casting if needed, and provide default values. Here we expect three string arguments for email, name, and password.
-	-   Then you see input data validations using standard ActiveModel validations. These will be applied to the input arguments. Execution will stop if there are any validation errors.
-	-   And finally we have the execute method where we implement the behavior. This method is called only if all inputs are present and valid.
-	-   In the execute method we have access to the errors collection on line 19.
-	-   On line 20 we halt execution if there are any errors.
-	-   Only if everything has worked as expected so far, do we cause the additional side effects of sending emails, etc.
-	-   Then we return the newly created user.
+	- The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for naming conventions.
+	- We first specify the input filters. They will check for the presence and correct type of each input argument. They can do type casting if needed, and provide default values. Here we expect three string arguments for email, name, and password.
+	- Then you see input data validations using standard ActiveModel validations. These will be applied to the input arguments. Execution will stop if there are any validation errors.
+	- And finally we have the execute method where we implement the behavior. This method is called only if all inputs are present and valid.
+	- In the execute method we have access to the errors collection.
+	- We then halt execution if there are any errors.
+	- Only if everything has worked as expected so far, do we cause the additional side effects of sending emails, etc.
+	- Then we return the newly created user.
     
 ```ruby
 # app/interactions/public/users/create.rb

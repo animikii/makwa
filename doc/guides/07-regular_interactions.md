@@ -35,7 +35,7 @@ Then you see input data validations using standard ActiveModel validations. Thes
 And finally we have the execute method where we implement the behavior. 
 
 This method is called only if all inputs are present and valid.
-In the execute method we have access to the errors collection on line 19.
-On line 20 we halt execution if there are any errors.
+In the execute method we have access to the errors collection
+We then halt execution if there are any errors.
 Only if everything has worked as expected so far, do we cause the additional side effects of sending emails, etc.
 Then we return the newly created user.

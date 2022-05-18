@@ -1,7 +1,6 @@
 # Regular Interactions
 ### Example: User Signup
 ```ruby
-
 class Create < ApplicationInteraction
   
   # Input filters

@@ -1,4 +1,4 @@
-# Example 3: RunReturningInteraction
+# Example: RunReturningInteraction
 # This is an example from within niiwin: https://github.com/animikii/niiwin-mvp/blob/main/app/controllers/i_app_data/i_widgets_controller/managed_by_niiwin.rb
 
 # app/controllers/i_app_data/i_widgets_controller/managed_by_niiwin.rb

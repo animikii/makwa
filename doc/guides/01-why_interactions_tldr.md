@@ -1,11 +1,11 @@
-# Why Should you use Interactions?
-## ActiveInteraction
+# Why should you use Interactions?
+### ActiveInteraction
 
 The purpose of Interactions is to encapsulate an app behaviour in a single purpose module so that we can simply and robustly invoke the behaviour in diverse contexts, e.g, controllers, tests, or consoles.
 
 Interactions give you a place to put your business logic. It also helps you write safer code by validating that your inputs conform to your expectations. **If ActiveRecord deals with your nouns, then ActiveInteraction handles your verbs.**
 
-Benefits of using Interactions
+### Benefits of using Interactions
 
 By encapsulating app behaviour you are able to:
 - Simply and robustly invoke a behaviour in diverse contexts, e.g., controllers, models, tests, rake tasks, or consoles.

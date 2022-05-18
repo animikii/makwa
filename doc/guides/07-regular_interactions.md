@@ -1,42 +1,28 @@
 # Regular Interactions
-
-## Example: User Signup
-
+### Example: User Signup
 ```ruby
-# app/interactions/public/users/create.rb
-module Public
-  module Users
-    class Create < ApplicationInteraction
-      
-      # Input filters
-      string :email
-      string :name
-      string :password
-      
-      # ActiveModel validations
-      validates :email, presence: true
-      validates :name, presence: true
-      validates :password, presence: true, length: { minimum: 6 }
-      
-      # @return [User]
-      def execute
-        user = User.new(inputs)
-        errors.merge!(user.errors) unless user.update(inputs.except(:user))
-        halt_if_errors!
-        
-        UserMailer.with(user: user).welcome_email.deliver_later
-        track_analytics_event(:signup, user)
-        MailchimpApi.delay.add_to_list(
-          ENV['MAILCHIMP_CUSTOMER_LIST_ID'],
-          user.email,
-          user.created_at.to_s(:mailchimp_date)
-        )
-        
-        user
-      end
-      
-    end
+
+class Create < ApplicationInteraction
+  
+  # Input filters
+  string :email
+  string :name
+  string :password
+  
+  # ActiveModel validations
+  validates :email, presence: true
+  validates :name, presence: true
+  validates :password, presence: true, length: { minimum: 6 }
+  
+  # @return [User]
+  def execute
+	user = User.new(inputs)
+	errors.merge!(user.errors) unless user.update(inputs.except(:user))
+	halt_if_errors!
+	user.update(inputs.except(:user))
+	user
   end
+  
 end
 ```
 

@@ -12,11 +12,26 @@ gem 'makwa'
 
 And then execute:
 
-    $ bundle install
+```shell
+$ bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install makwa
+```shell
+$ gem install makwa
+```
+
+Makwa extends on the Active Interactions gem, if you do not have this installed, you can add it to your Gemfile:
+
+```ruby
+gem 'active_interaction', '~> 4.1'
+```
+
+or install it manually
+```shell
+$ gem install active_interaction --version '~> 4.1' 
+```
 
 ## Usage
 

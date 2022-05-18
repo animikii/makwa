@@ -63,9 +63,7 @@ end
 * Notice how we don’t have to set up the form object in case of errors. The interaction is guaranteed to return the User instance.
 * Because it is a proper ActiveRecord instance, you can pass the return value to the re-rendered form, and then you have access to all the ActiveRecord conveniences like associations, and all instance methods that exist on the model.
 
-You may be wondering when to use regular vs returning interactions.
-* So far, Niiwin utilizes about half regular and half returning interactrions
-* Returning interactions are used for Rails form integration, and regular interactions for everything else.
+You may be wondering when to use regular vs returning interactions. Very generally, returning interactions can be used for Rails form integration, and regular interactions for everything else.
 
 I hope that you can see the value of using interactions.
 

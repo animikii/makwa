@@ -63,14 +63,14 @@ Interactions print detailed info to the log. Output includes:
 
 Example:
 ```ruby
-Executing interaction Niiwin::NwLoader::InitialLoad (id#70361484811280)
+Executing interaction DataApp::DbLoader::InitialLoad (id#70361484811280)
  ↳ inputs: {} (id#70361484811280)
-    Executing interaction Niiwin::NwLoader::NwConfigs::Load (id#70361484766000)
-     ↳ called from niiwin/nw_loader/initial_load.rb:14:in `initial_load_nw_config' (id#70361484766000)
+    Executing interaction DataApp::NbLoader::DbConfigs::Load (id#70361484766000)
+     ↳ called from dataapp/db_loader/initial_load.rb:14:in `initial_load_db_config' (id#70361484766000)
      ↳ inputs: {} (id#70361484766000)
      ↳ outcome: succeeded (id#70361484766000)
-    Executing interaction Niiwin::NwLoader::NwConfigs::Validate (id#70361476717620)
-     ↳ called from niiwin/nw_loader/initial_load.rb:15:in `initial_load_nw_config' (id#70361476717620)
+    Executing interaction DataApp::DbLoader::DbConfigs::Validate (id#70361476717620)
+     ↳ called from DataApp/db_loader/initial_load.rb:15:in `initial_load_db_config' (id#70361476717620)
      ↳ inputs: {} (id#70361476717620)
      ↳ outcome: succeeded (id#70361476717620)
  ↳ outcome: succeeded (id#70361484811280)

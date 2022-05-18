@@ -70,11 +70,11 @@ end
 **Using a ReturningInteractions in a controller is very similar to invoking a regular interaction.**
 * Instead of :run we invoke it with :run_returning!, and we pass a user argument that is initialized to a new User record.
 * Notice how we don’t have to set up the form object in case of errors. The interaction is guaranteed to return the User instance.
-* Because it is a proper ActiveRecord instance, we can pass the return value to the re-rendered form, and we have access to all the ActiveRecord conveniences like associations, and all instance methods that exist on the model.
+* Because it is a proper ActiveRecord instance, you can pass the return value to the re-rendered form, and then you have access to all the ActiveRecord conveniences like associations, and all instance methods that exist on the model.
 
 You may be wondering when to use regular vs returning interactions.
-* I've been using half regular and half returning interactions in Niiwin so far.
-* I use returning interactions for Rails form integration. And regular interactions for everything else.
+* So far, Niiwin utilizes about half regular and half returning interactrions
+* Returning interactions are used for Rails form integration, and regular interactions for everything else.
 
 I hope that you can see the value of using interactions.
 

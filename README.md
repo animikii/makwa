@@ -22,7 +22,21 @@ Or install it yourself as:
 $ gem install makwa
 ```
 
+<<<<<<< HEAD
 Makwa extends the Active Interactions gem, and will install it automatically.
+=======
+Makwa extends the Active Interactions gem and will install it automatically.
+
+```ruby
+gem 'active_interaction', '~> 4.1'
+```
+
+or install it manually
+
+```shell
+$ gem install active_interaction --version '~> 4.1' 
+```
+>>>>>>> 8b4b6f4becbce858086390df7d6cff442ddbe167
 
 ## Usage
 
@@ -44,11 +58,19 @@ class Create < ApplicationInteraction
 
   # @return [User]
   def execute
+<<<<<<< HEAD
     user = User.new(inputs)
     errors.merge!(user.errors) unless user.update(inputs.except(:user))
     halt_if_errors!
     user.update(inputs.except(:user))
     user
+=======
+	user = User.new(inputs)
+	errors.merge!(user.errors) unless user.save
+	halt_if_errors!
+	user.update(inputs.except(:user))
+	user
+>>>>>>> 8b4b6f4becbce858086390df7d6cff442ddbe167
   end
 
 end

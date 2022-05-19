@@ -29,7 +29,7 @@ module IAppData
 
       returning :i_widget
 
-      record :i_widget, class: IWidget, default: -> { IWidget.new }
+      record :i_widget, class: IWidget
       boolean :i_boolean_attr
       string :i_color_attr, default: nil
       date :i_date_attr

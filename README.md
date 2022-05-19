@@ -44,7 +44,8 @@ $ gem install active_interaction --version '~> 4.1'
 
 ```ruby
 
-class Create < ApplicationInteraction
+module Users
+  class Create < ApplicationInteraction
 
   # Input filters
   string :email

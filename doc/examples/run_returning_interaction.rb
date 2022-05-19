@@ -9,7 +9,7 @@ def create
                .to_unsafe_hash
                .transform_values(&:presence) # convert empty strings to nil for interaction input filters
   @i_widget = ::IAppData::IWidgets::Create.run_returning!(
-    { i_widget: IWidget.new(ar_attrs) }.merge(ar_attrs),
+    { i_widget: IWidget.new }.merge(ar_attrs),
     )
   if @i_widget.errors_any?
     @ndb_table = DataApp::NwTable.find(:i_widget)

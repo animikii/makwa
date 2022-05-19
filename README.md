@@ -22,7 +22,7 @@ Or install it yourself as:
 $ gem install makwa
 ```
 
-Makwa extends on the Active Interactions gem, if you do not have this installed, you can add it to your Gemfile:
+Makwa extends the Active Interactions gem and will install it automatically.
 
 ```ruby
 gem 'active_interaction', '~> 4.1'

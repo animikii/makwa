@@ -88,17 +88,9 @@ class UsersController < ApplicationController
 end
 ```
 
-<<<<<<< HEAD
 5. Next, want to allow users to sign up from our Hootsuite app via the API. We will have to duplicate the logic in
    another Users controller in the API namespace. We could work around this by extracting the code into a controller
    concern and include that in both controllers for code reuse.
-=======
-5. Next, we want to allow users to sign up from our Hootsuite app via the API. We will have to duplicate the logic in another Users controller in the API namespace. We could work around this by extracting the code into a controller concern and include that in both controllers for code reuse.
->>>>>>> 8b4b6f4becbce858086390df7d6cff442ddbe167
-
-   We now have an increasingly complicated process for signup, and the only way to test it is via controller tests. And
-   these tests are slow to run and tricky to set up because we need to handle all the dependencies on Mailers,
-   analytics, and Mailchimp.
 
 ```ruby
 

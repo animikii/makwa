@@ -55,7 +55,7 @@ class Create < ApplicationInteraction
   # @return [User]
   def execute
 	user = User.new(inputs)
-	errors.merge!(user.errors) unless user.update(inputs.except(:user))
+	errors.merge!(user.errors) unless user.save
 	halt_if_errors!
 	user.update(inputs.except(:user))
 	user

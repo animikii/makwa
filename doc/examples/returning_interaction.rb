@@ -1,6 +1,7 @@
 # Example: ReturningInteraction
 # As an example we use a ReturningInteraction to update User records in the admin workspace
 
+# app/controllers/public/usercontroller/basecontroller.rb
 class UsersController < BaseController
   ...
     def update
@@ -12,6 +13,7 @@ class UsersController < BaseController
   ...
 end
 
+# app/interactions/public/users/update.rb
 module Users
   class Update < ReturningInteraction
 

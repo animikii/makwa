@@ -1,7 +1,7 @@
 # Example: RunReturningInteraction
-# This is an example from within niiwin: https://github.com/animikii/niiwin-mvp/blob/main/app/controllers/i_app_data/i_widgets_controller/managed_by_niiwin.rb
+# This is an example of a widgets controller
 
-# app/controllers/i_app_data/i_widgets_controller/managed_by_niiwin.rb
+# app/controllers/i_app_data/i_widgets_controller/managed_by_app.rb
 def create
   authorize([:i_app_data, IWidget])
   ar_attrs = params
@@ -12,9 +12,9 @@ def create
     { i_widget: IWidget.new(ar_attrs) }.merge(ar_attrs),
     )
   if @i_widget.errors_any?
-    @nw_table = Niiwin::NwTable.find(:i_widget)
+    @ndb_table = DataApp::NwTable.find(:i_widget)
     @ar_instance = @i_widget
-    render template: nw_new_template
+    render template: ndb_new_template
   else
     redirect_to(i_app_data_i_widgets_path)
   end

@@ -1,38 +1,44 @@
 # Regular Interactions
+
 ### Example: User Signup
+
 ```ruby
+
 class Create < ApplicationInteraction
-  
+
   # Input filters
   string :email
   string :name
   string :password
-  
+
   # ActiveModel validations
   validates :email, presence: true
   validates :name, presence: true
   validates :password, presence: true, length: { minimum: 6 }
-  
+
   # @return [User]
   def execute
-	user = User.new(inputs)
-	errors.merge!(user.errors) unless user.update(inputs.except(:user))
-	halt_if_errors!
-	user.update(inputs.except(:user))
-	user
+    user = User.new(inputs)
+    errors.merge!(user.errors) unless user.update(inputs.except(:user))
+    halt_if_errors!
+    user.update(inputs.except(:user))
+    user
   end
-  
+
 end
 ```
 
 **Here is a User Signup interaction**
 
-The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for naming conventions.
-We first specify the input filters. They will check for the presence and correct type of each input argument. They can do type casting if needed, and provide default values. 
+The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for
+naming conventions.
+We first specify the input filters. They will check for the presence and correct type of each input argument. They can
+do type casting if needed, and provide default values.
 
 Here we expect three string arguments for email, name, and password.
-Then you see input data validations using standard ActiveModel validations. These will be applied to the input arguments. Execution will stop if there are any validation errors.
-And finally we have the execute method where we implement the behavior. 
+Then you see input data validations using standard ActiveModel validations. These will be applied to the input
+arguments. Execution will stop if there are any validation errors.
+And finally we have the execute method where we implement the behavior.
 
 This method is called only if all inputs are present and valid.
 In the execute method we have access to the errors collection

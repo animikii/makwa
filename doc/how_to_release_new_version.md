@@ -5,10 +5,9 @@
   * Update CHANGELOG.md
   * Commit changes
 * Prepare new release
-  * Bump version via one of
-    * `gem bump --tag --version major`
-    * `gem bump --tag --version minor`
-    * `gem bump --tag --version patch`
-  * The bump command will commit the new version and tag the commit.
+  * Assign new version in `lib/makwa/version.rb`
+  * Commit the change with "Bump to <version>"
+  * Tag the commit of the new version with `v<version>`
+  * Push the changes
 * Distribute new release
-  * `gem release` - This will push the new release to rubygems.org.
+  * `gem push makwa` - This will push the new release to rubygems.org.

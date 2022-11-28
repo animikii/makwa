@@ -15,7 +15,7 @@ end
 ```
 
 ```ruby
-# app/interactions/application_interaction.rb
+# app/interactions/application_returning_interaction.rb
 class ApplicationReturningInteraction < Makwa::ReturningInteraction
   def debug(txt)
     # Uncomment the next line for detailed debug output
@@ -48,6 +48,12 @@ module Infrastructure
     end
   end
 end
+```
+
+You can then use this interaction to send emails:
+
+```ruby
+Infrastructure::SendEmail.run!(recipient_email: "email@test.com", subject: "Email Subject", body: "Email Body")
 ```
 
 ## Implement a ReturningInteraction to create a user
@@ -141,7 +147,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = Users::Create.run_returning!(
+    @user = Users::Update.run_returning!(
       {user: @user}.merge(params.fetch(:user, {}))
     )
 
@@ -187,7 +193,7 @@ Interactions follow these conventions:
     * Makes it easy to pass test data into an interaction.
     * Makes it easy to serialize the invocation of an interaction, e.g., for a Sidekiq background job.
     * We do not pass in ActiveRecord instances, but their ids instead. We rely on ActiveRecord caching to prevent multiple DB reads when passing the same record id into nested interactions. Exceptions:
-      * You can pass a descendent of ActiveModel, e.g., an ActiveRecord instance as the returned input to a ReturningInteraction. Use the record input filter type. It accepts both the ActiveRecord instance, as well as its id attribute. That way, you can still pass in basic Ruby types, e.g., in the console when invoking the interaction.
+      * You can pass a descendant of ActiveModel, e.g., an ActiveRecord instance as the returned input to a ReturningInteraction. Use the record input filter type. It accepts both the ActiveRecord instance, as well as its id attribute. That way, you can still pass in basic Ruby types, e.g., in the console when invoking the interaction.
       * In some use cases with nested interactions, we may choose to pass in an ActiveRecord instance to work around persistence concerns.
   * When an interaction is concerned with an ActiveRecord instance, we pass the record’s id under the :id hash key (unless it’s a ReturningInteraction).
 

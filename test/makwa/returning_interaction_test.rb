@@ -7,6 +7,7 @@ module Makwa
     class ImplementsActiveModelErrorsInterface
       # Required dependency for ActiveModel::Errors
       extend ActiveModel::Naming
+      include ActiveModel::AttributeAssignment
 
       # Use this instead of `outcome.invalid?` (which is destructive and clears errors)
       delegate :any?, to: :errors, prefix: true # def errors_any?

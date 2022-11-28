@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.summary = "Interactions for Ruby on Rails apps."
   spec.homepage = "https://github.com/animikii/makwa"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.4.0"
+  spec.required_ruby_version = ">= 2.7.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/animikii/makwa"
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "active_interaction", "~> 4.0"
+  spec.add_dependency "active_interaction", "~> 5.2.0"
 
   spec.add_development_dependency "standard"
   spec.add_development_dependency "byebug"

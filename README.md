@@ -1,13 +1,19 @@
 # Makwa
 
-Interactions for Ruby on Rails.
+Makwa is an extension of the [ActiveInteraction](https://github.com/AaronLasseigne/active_interaction) gem, bringing interactions to Ruby on Rails apps.
+
+> ActiveInteraction manages application-specific business logic. It's an implementation of service objects designed to blend seamlessly into Rails. It also helps you write safer code by validating that your inputs conform to your expectations. If ActiveModel deals with your nouns, then ActiveInteraction handles your verbs.
+
+<p align="center">Readme for ActiveInteraction.</p>
+
+Makwa improves the ergonomics around mutating ActiveRecord instances.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'makwa'
+gem "makwa"
 ```
 
 And then execute:
@@ -22,112 +28,155 @@ Or install it yourself as:
 $ gem install makwa
 ```
 
-Makwa extends the Active Interactions gem and will install it automatically.
+Makwa extends the ActiveInteraction gem and will install it automatically as a dependency.
+
+Makwa is compatible with Ruby 2.7 or greater and Rails 5 or greater.
+
+## What does Makwa add to ActiveInteraction?
+
+Please read through the [ActiveInteraction Readme](https://github.com/AaronLasseigne/active_interaction) first and then come back here to see what Makwa adds to ActiveInteraction:
+
+### ReturningInteraction
+
+ReturningInteractions are a special kind of interaction, optimized for usage with Rails forms:
+
+The basic approach of ActiveInteraction (AI) when rendering ActiveRecord model forms is to pass an AI instance to the form. That approach works great for simple mutations of ActiveRecord instances. However, for this to work, the AI class has to implement all methods required for rendering your forms. That can get tricky when you need to traverse associations, or call complex decorators on your models.
+
+ReturningInteraction (RI) chooses a different approach: It accepts the to-be-mutated ActiveRecord instance as an input argument and is guaranteed to return that instance, no matter if the interaction outcome is successful or not. The RI will merge all errors that occurred during execution to the returned ActiveRecord instance. This allows you to pass the actual ActiveRecord instance to your form, and you don't have to implement all methods required for the form to be rendered.
+
+Let's look at some example code to see the difference:
+
+The ActiveInteraction way
 
 ```ruby
-gem 'active_interaction', '~> 4.1'
-```
+# app/controllers/users_controller.rb
+class UsersController < ApplicationController
+  def new
+    @user = User.new
+  end
 
-or install it manually
+  def create
+    outcome = Users::Create.run(
+      params.fetch(:user, {})
+    )
 
-```shell
-$ gem install active_interaction --version '~> 4.1' 
-```
+    if outcome.valid?
+      redirect_to(outcome.result)
+    else
+      @user = outcome
+      render(:new)
+    end
+  end
+end
 
-## Usage
-
-### Here is an example of an Interaction and a Controller which invoked the Interaction
-
-```ruby
-
+# app/interactions/users/create.rb
 module Users
   class Create < ApplicationInteraction
+    string :first_name
+    string :last_name
+    array :role_ids, default: []
 
-  # Input filters
-  string :email
-  string :name
-  string :password
-
-  # ActiveModel validations
-  validates :email, presence: true
-  validates :name, presence: true
-  validates :password, presence: true, length: { minimum: 6 }
-
-  # @return [User]
-  def execute
-    user = User.new(inputs)
-    errors.merge!(user.errors) unless user.save
-    
-    halt_if_errors!
-    user.update(inputs.except(:user))
-    
-    user
-  end
-
-end
-```
-
-The interaction file is located at app/interactions/public/users/create.rb. Our documentation contains good tips for
-naming conventions.
-
-We first specify the input filters. They will check for the presence and correct type of each input argument. They can
-do type casting if needed, and provide default values. Here we expect three string arguments for email, name, and
-password.
-
-Next you see input data validations using standard ActiveModel validations. These will be applied to the input
-arguments. Execution will stop if there are any validation errors. Finally we have the execute method where we implement
-the behavior. This method is called only if all inputs are present and valid. In the execute method we have access to
-the errors collection.
-
-We halt execution if there are any errors. Only if everything has worked as expected so far, do we cause the additional
-side effects of sending emails, etc.
-
-Only then do we return the newly created user.
-
-```ruby
-
-module Public
-  class UsersController < BaseController
-
-    def create
-      outcome = Public::Users::Create.run(oarams[:user].to_unsafe_hash)
-      if outcome.errors_empty?
-        redirect_to dashboard_path, notice: "Welcome to our app!"
-      else
-        @user = outcome
-        render(:new)
-      end
+    def execute
+      user = User.new(inputs)
+      errors.merge!(user.errors) unless user.save
+      user
     end
 
+    def to_model
+      User.new
+    end
   end
 end
 ```
 
-This is how we invoke the Interaction from the controller:
+The Makwa way
 
-We call it with the user params. Notice that we’re not using StrongParameters. The interaction knows which arguments are
-allowed and will validate them in a much more powerful way than StrongParameters can do.
+```ruby
+# app/controllers/users_controller.rb
+class UsersController < ApplicationController
+  def new
+    @user = User.new
+  end
 
-We assign the return value to `outcome` and check if it has no errors. If there are errors we re-render the signup form
-and use the interaction itself as the form object. The interaction has public getters for all input arguments, and it
-implements the ActiveModel errors interface, so form errors will be displayed as expected.
+  def create
+    # Differences: Pass in the `:user` input and call `#run_returning!` instead of `#run`.
+    @user = Users::Create.run_returning!(
+      {user: User.new}.merge(params.fetch(:user, {}))
+    )
 
-We can reuse the interaction code by invoking the same interaction from the Hootsuite API users controller.
+    if @user.errors_empty?
+      redirect_to(@user)
+    else
+      render(:new)
+    end
+  end
+end
 
-Further documentation can be found in [docs](doc/guides/01-why_interactions_tldr.md)
+# app/interactions/users/create.rb
+module Users
+  class Create < ApplicationReturningInteraction
+    returning :user # This is different from AI: Specifies which input will be returned.
 
-More examples can be found in [doc/examples](dov/examples)
+    string :first_name
+    string :last_name
+    string :email
+    record :user
+
+    def execute_returning # Notice: Method is called `execute_returning`, not `execute`!
+      user.update(inputs.except(:user))
+      # No need to merge any errors. This will be done automatically by Makwa
+      return_if_errors!
+
+      compose(
+        Infrastructure::SendEmail,
+        recipient_email: user.email,
+        subject: "Welcome to Makwa",
+        body: "Lorem ipsum..."
+      )
+      # No need for an explicit return of user, also done by Makwa (via `returning` input filter)
+    end
+
+    # No need to implement the `#to_model` method and any other methods required to render your forms.
+  end
+end
+```
+
+### Other improvements
+
+Makwa offers **safe ways to check for errors**. Instead of `#valid?` or `#invalid?` use `#errors_empty?` or `#errors_any?`. Rails' `#valid?` method is a destructive method that will clear all errors and re-run validations. This will eradicate any errors you added in the body of the `#execute` or `#execute_returning` methods.
+
+Makwa offers a simple way to **exit early** from the interaction. Use `#return_if_errors!` at any point in the `#execute` method if errors make it impossible to continue execution of the interaction.
+
+Makwa offers **detailed logging** around interaction invocations (with inputs) and outcomes (with errors):
+
+```
+Executing interaction Users::SendWelcomeEmail (id#1234567)
+ ↳ called from Users::Create (id#7654321)
+ ↳ inputs: {first_name: "Giselher", last_name: "Wulla"} (id#7654321)
+ # ... execute interaction
+ ↳ outcome: failed (id#7654321)
+ ↳ errors: "Email is missing" (id#7654321)
+```
+
+To enable debug logging just define this method in your `ApplicationInteraction`:
+
+```ruby
+def debug(txt)
+  puts indent + txt
+end
+```
+
+### Further reading
+
+* [Usage](doc/usage_examples.md): More complex examples and conventions.
+* [About interactions](doc/about_interactions.md): Motivation, when to use them.
+* [Features and design considerations](doc/features_and_design_considerations.md)
 
 ## Development
 
-Development instructions found in [gem_development](gem_development/how_to_release_new_version.md)
+After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive
-prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the
-version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version,
-push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+We have [instructions for releasing a new version](doc/how_to_release_new_version.md).
 
 ## Contributing
 

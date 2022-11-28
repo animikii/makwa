@@ -2,7 +2,7 @@
 
 module Makwa
   class Interaction < ::ActiveInteraction::Base
-    class Interrupt < Object.const_get("::ActiveInteraction::Interrupt")
+    class Interrupt < Object.const_get(:"::ActiveInteraction::Interrupt")
     end
 
     #
@@ -41,10 +41,10 @@ module Makwa
     # Log interaction's outcome and errors if any.
     set_callback :execute, :after, ->(interaction) {
       if interaction.errors_empty?
-        debug(" ↳ outcome: succeeded (id##{interaction.object_id})")
+        debug(" ↳ outcome: succeeded #{interaction.id_marker}")
       else
-        debug(" ↳ outcome: failed (id##{interaction.object_id})")
-        debug(" ↳ errors: #{interaction.errors.details} (id##{interaction.object_id})")
+        debug(" ↳ outcome: failed #{interaction.id_marker}")
+        debug(" ↳ errors: #{interaction.errors.details} #{interaction.id_marker}")
       end
     }
 

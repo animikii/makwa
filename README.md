@@ -4,7 +4,7 @@ Makwa is an extension of the [ActiveInteraction](https://github.com/AaronLasseig
 
 > ActiveInteraction manages application-specific business logic. It's an implementation of service objects designed to blend seamlessly into Rails. It also helps you write safer code by validating that your inputs conform to your expectations. If ActiveModel deals with your nouns, then ActiveInteraction handles your verbs.
 
-<p align="center">Readme for ActiveInteraction.</p>
+<p align="right">Readme for ActiveInteraction.</p>
 
 Makwa improves the ergonomics around mutating ActiveRecord instances.
 
@@ -40,7 +40,7 @@ Please read through the [ActiveInteraction Readme](https://github.com/AaronLasse
 
 ReturningInteractions are a special kind of interaction, optimized for usage with Rails forms:
 
-The basic approach of ActiveInteraction (AI) when rendering ActiveRecord model forms is to pass an AI instance to the form. That approach works great for simple mutations of ActiveRecord instances. However, for this to work, the AI class has to implement all methods required for rendering your forms. That can get tricky when you need to traverse associations, or call complex decorators on your models.
+The basic approach of ActiveInteraction (AI) when rendering ActiveRecord model forms is to pass an AI instance to the form. That approach works great for simple mutations of ActiveRecord instances. However, for this to work, the AI class has to implement all methods required for rendering your forms. That can get tricky when you need to traverse associations, or call complex decorators on your models. This approach also fails if the interaction's `#execute` method is never run because the input validations fail.
 
 ReturningInteraction (RI) chooses a different approach: It accepts the to-be-mutated ActiveRecord instance as an input argument and is guaranteed to return that instance, no matter if the interaction outcome is successful or not. The RI will merge all errors that occurred during execution to the returned ActiveRecord instance. This allows you to pass the actual ActiveRecord instance to your form, and you don't have to implement all methods required for the form to be rendered.
 
@@ -133,10 +133,12 @@ module Users
         subject: "Welcome to Makwa",
         body: "Lorem ipsum..."
       )
-      # No need for an explicit return of user, also done by Makwa (via `returning` input filter)
+      # No need for an explicit return of user, also done by Makwa
+      # (via `returning` input filter).
     end
 
-    # No need to implement the `#to_model` method and any other methods required to render your forms.
+    # No need to implement the `#to_model` method and any other methods required to
+    # render your forms.
   end
 end
 ```

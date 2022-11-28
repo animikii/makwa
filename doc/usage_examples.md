@@ -1,9 +1,5 @@
 # Makwa Interaction Usage Examples
 
-## Install the Gem
-
-Add the `makwa` gem to your Gemfile.
-
 ## Specify your Application interactions
 
 All specific interactions will inherit from your app-wide interactions:

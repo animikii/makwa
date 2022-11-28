@@ -15,7 +15,7 @@ end
 ```
 
 ```ruby
-# app/interactions/application_interaction.rb
+# app/interactions/application_returning_interaction.rb
 class ApplicationReturningInteraction < Makwa::ReturningInteraction
   def debug(txt)
     # Uncomment the next line for detailed debug output

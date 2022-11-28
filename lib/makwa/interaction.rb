@@ -28,7 +28,7 @@ module Makwa
     #
 
     # Log execution of interaction, caller, and inputs
-    set_callback :type_check, :before, ->(interaction) {
+    set_callback :filter, :before, ->(interaction) {
       debug("Executing interaction #{interaction.class.name} #{interaction.id_marker}")
       calling_interaction = interaction.calling_interaction
       debug(" ↳ called from #{calling_interaction} #{interaction.id_marker}") if calling_interaction.present?

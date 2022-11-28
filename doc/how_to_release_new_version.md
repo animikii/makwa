@@ -9,5 +9,6 @@
   * Commit the change with "Bump makwa to <version>"
   * Tag the commit of the new version with `v<version>`
   * Push the changes
+  * Build the gem with `gem build`
 * Distribute new release
-  * `gem push makwa` - This will push the new release to rubygems.org.
+  * `gem push makwa-<version>.gem` - This will push the new release to rubygems.org.

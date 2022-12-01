@@ -2,7 +2,7 @@
 
 module Makwa
   class Interaction < ::ActiveInteraction::Base
-    class Interrupt < Object.const_get(:"::ActiveInteraction::Interrupt")
+    class Interrupt < Object.const_get("::ActiveInteraction::Interrupt")
     end
 
     #

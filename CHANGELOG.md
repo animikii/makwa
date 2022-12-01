@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [1.0.1] - 2022-12-01
+
+- Fixes reference to nested class (symbol -> string)
+
 ## [1.0.0] - 2022-11-26
 
 - Upgrades ActiveInteraction from 4.x to 5.2.x. Please see the [ActiveInteraction CHANGELOG](https://github.com/AaronLasseigne/active_interaction/blob/main/CHANGELOG.md) for what has changed between v. 4.x and 5. There are some breaking changes.

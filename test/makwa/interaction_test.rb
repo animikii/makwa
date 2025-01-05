@@ -16,6 +16,14 @@ module Makwa
       end
     end
 
+    class OuterInteractionForComposeTest < Makwa::Interaction
+      string :string_input
+
+      def execute
+        compose(InteractionUnderTest, inputs)
+      end
+    end
+
     test "responds to #errors_any?" do
       outcome = InteractionUnderTest.run
       assert_equal(false, outcome.errors_any?)
@@ -58,6 +66,14 @@ module Makwa
       assert(outcome.errors_any?)
       # In the error case, errors are returned as the result.
       assert_equal(outcome.errors, outcome.result)
+    end
+
+    test "merges errors from composed interactions" do
+      outcome = OuterInteractionForComposeTest.run(string_input: "invalid string")
+      assert_equal(
+        {string_input: [{error: "must contain 'value'"}]},
+        outcome.errors.details
+      )
     end
   end
 end

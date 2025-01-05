@@ -88,6 +88,20 @@ module Makwa
       end
     end
 
+    class OuterReturningInteractionForComposeTest < Makwa::ReturningInteraction
+      returning :returned_record
+
+      record :returned_record, class: ImplementsActiveModelErrorsInterface
+
+      boolean :boolean_attr
+      integer :integer_attr
+      hash :nested_hash_attr, strip: false, default: {}
+
+      def execute_returning
+        compose(ErrorReturningInteractionUnderTest, inputs)
+      end
+    end
+
     test "Has no errors with valid inputs" do
       returned_record = ReturningInteractionUnderTest.run_returning!(
         returned_record: ImplementsActiveModelErrorsInterface.new,
@@ -137,6 +151,23 @@ module Makwa
         {
           error: [{error: "on the returned object"}, {error: "on the interaction"}],
           duplicate: [{error: "error on both"}]
+        },
+        returned_record.errors.details
+      )
+    end
+
+    test "Merges errors from composed interactions" do
+      returned_record = OuterReturningInteractionForComposeTest.run_returning!(
+        returned_record: ImplementsActiveModelErrorsInterface.new,
+        boolean_attr: 42,
+        integer_attr: true,
+        nested_hash_attr: "abc"
+      )
+      assert_equal(
+        {
+          boolean_attr: [{error: :invalid_type, type: "boolean"}],
+          integer_attr: [{error: :invalid_type, type: "integer"}],
+          nested_hash_attr: [{error: :invalid_type, type: "hash"}]
         },
         returned_record.errors.details
       )

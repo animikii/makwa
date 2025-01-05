@@ -88,7 +88,7 @@ module Makwa
 
       @_interaction_result
     rescue NotImplementedError
-      super(other, *args)
+      super
     end
   end
 end

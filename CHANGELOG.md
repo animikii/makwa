@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [1.0.2] - 2025-01-05
+
+- Updates #return_if_errors! to not include errors in exception object. This addresses an issue where errors
+  are duplicated under the base key.
+- Adds tests for failing composed interactions.
+
 ## [1.0.1] - 2022-12-01
 
 - Fixes reference to nested class (symbol -> string)

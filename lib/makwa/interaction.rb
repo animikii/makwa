@@ -20,7 +20,7 @@ module Makwa
 
     # Exits early if there are any errors.
     def return_if_errors!
-      raise(Interrupt, errors) if errors_any?
+      raise(Interrupt, ActiveInteraction::Errors.new(self)) if errors_any?
     end
 
     #

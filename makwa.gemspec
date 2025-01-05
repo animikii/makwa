@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "active_interaction", "~> 5.2.0"
+  spec.add_dependency "active_interaction", "~> 5.4.0"
 
   spec.add_development_dependency "standard"
   spec.add_development_dependency "byebug"

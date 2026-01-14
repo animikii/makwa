@@ -50,7 +50,10 @@ module Makwa
         # Add errors and values to the result object (so that the form can render them) and return the result object
         return result
             .tap { |r| r.errors.merge!(errors) }
-            .tap { |r| r.assign_attributes(inputs.except(return_filter)) }
+            .tap { |r|
+              valid_attrs = inputs.except(return_filter).select { |key, _| r.respond_to?("#{key}=") }
+              r.assign_attributes(valid_attrs)
+            }
       end
 
       # Otherwise run the body of the interaction (along with any callbacks) ...

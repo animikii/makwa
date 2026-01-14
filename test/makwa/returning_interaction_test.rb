@@ -54,6 +54,7 @@ module Makwa
       boolean :boolean_attr
       integer :integer_attr
       hash :nested_hash_attr, strip: false, default: {}
+      integer :additional_input_filter, default: nil # This is an input filter that doesn't correspond to an attr
 
       def execute_returning
         returned_record.boolean_attr = boolean_attr
@@ -123,6 +124,7 @@ module Makwa
         integer_attr: true,
         nested_hash_attr: "abc"
       )
+      # Verify that we encounter a validation error
       assert(returned_record.errors_any?)
       assert_equal(
         {
@@ -132,6 +134,36 @@ module Makwa
         },
         returned_record.errors.details
       )
+      # Verify that the invalid values are all assigned to returned_record
+      assert_equal(returned_record.boolean_attr, 42)
+      assert_equal(returned_record.integer_attr, true)
+      assert_equal(returned_record.nested_hash_attr, "abc")
+    end
+
+    test "Handles inputs that are not attributes of the returned_record when encountering validation errors" do
+      returned_record = ReturningInteractionUnderTest.run_returning!(
+        returned_record: ImplementsActiveModelErrorsInterface.new,
+        boolean_attr: 42,
+        integer_attr: true,
+        nested_hash_attr: "abc",
+        additional_input_filter: 1
+      )
+      # Verify that we encounter a validation error
+      assert(returned_record.errors_any?)
+      assert_equal(
+        {
+          boolean_attr: [{error: :invalid_type, type: "boolean"}],
+          integer_attr: [{error: :invalid_type, type: "integer"}],
+          nested_hash_attr: [{error: :invalid_type, type: "hash"}]
+        },
+        returned_record.errors.details
+      )
+      # Verify that the invalid values are all assigned to returned_record
+      assert_equal(returned_record.boolean_attr, 42)
+      assert_equal(returned_record.integer_attr, true)
+      assert_equal(returned_record.nested_hash_attr, "abc")
+      # Verify that returned_record does not have an attribute named :additional_input_filter
+      refute(returned_record.respond_to?(:additional_input_filter))
     end
 
     test "Implements #return_if_errors!" do

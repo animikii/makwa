@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [1.0.3] - 2026-01-14
+
+- Removes debug entries from the `Interaction#calling_interactions` call stack.
+- Handles ReturningInteraction input filters that are not an attribute of the returned record when encountering validation errors.
+
 ## [1.0.2] - 2025-01-05
 
 - Updates #return_if_errors! to not include errors in exception object. This addresses an issue where errors

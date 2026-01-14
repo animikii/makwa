@@ -51,7 +51,10 @@ module Makwa
     # @return [Array<String>] the callstack containing interactions only, starting with the immediate caller.
     def calling_interactions
       @calling_interactions ||= caller.find_all { |e|
-        e.index("/app/interactions/") && !e.index(__FILE__) && !e.index("/returning_interaction.rb")
+        e.index("/app/interactions/") \
+          && !e.index(__FILE__) \
+          && !e.index("/returning_interaction.rb") \
+          && !e.index("`debug'")
       }
     end
 

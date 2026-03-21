@@ -12,7 +12,7 @@ When to use an interaction:
   * post-persistence actions like sending an email, or triggering another interaction
 * Decoupling behavior from ActiveRecord classes:
   * Replace **ALL** ActiveRecord `:after_...` callbacks with interactions. This refers to all after callbacks, not just save.
-  * Replace **MOST** ActiveRecord `:before_...` callbacks with interactions. This refers to all `:before_…` callbacks, not just save. An exception that can remain as a callback could be a `:before_validation` callback to sanitize an email address (strip surrounding whitespace, lower case), however, if there is already an interaction to create/update a user, you may as well do it in the interaction.
+  * Replace **MOST** ActiveRecord `:before_...` callbacks with interactions. This refers to all `:before_…` callbacks, not just save. One typical application was input data sanitization, e.g., for an email address (strip surrounding whitespace, lower case), however, this is now better handled with a Rails `normalizes` macro in the model.
   * Replace Model instance and class methods that implement complex behaviours with interactions. Note that you can still use the Model methods as interface, however, the implementation should live in an interaction.
 * Implement complex domain behaviours by composing sub tasks into higher level processes.
 * Wrap a 3rd party service so that we can swap it out in a single place if needed.

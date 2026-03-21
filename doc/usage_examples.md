@@ -56,6 +56,8 @@ You can then use this interaction to send emails:
 Infrastructure::SendEmail.run!(recipient_email: "email@test.com", subject: "Email Subject", body: "Email Body")
 ```
 
+Note that here we combine `Service` classes with Interactions for a well factored architecture.
+
 ## Implement a ReturningInteraction to create a user
 
 ```ruby
@@ -64,10 +66,10 @@ module Users
   class Create < ApplicationReturningInteraction
     returning :user
 
+    record :user, default: -> { User.new }
     string :first_name
     string :last_name
     string :email
-    record :user
 
     validates :first_name, presence: true
     validates :last_name, presence: true
@@ -99,9 +101,7 @@ class UsersController < ApplicationController
 
   def create
     # Differences: Pass in the `:user` input and call `#run_returning!` instead of `#run`.
-    @user = Users::Create.run_returning!(
-      {user: User.new}.merge(params.fetch(:user, {}))
-    )
+    @user = Users::Create.run_returning!(params.fetch(:user, {})
 
     if @user.errors_empty?
       redirect_to(@user)
@@ -120,10 +120,10 @@ module Users
   class Update < ApplicationReturningInteraction
     returning :user
 
+    record :user
     string :first_name
     string :last_name
     string :email
-    record :user
 
     validates :first_name, presence: true
     validates :last_name, presence: true
